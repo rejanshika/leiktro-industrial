@@ -1,11 +1,36 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { PlayCircle } from "lucide-react";
 import Reveal from "@/components/motion/Reveal";
 import TextReveal from "@/components/motion/TextReveal";
 
 export default function VideoShowcase() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Play only when the section is on screen. Setting muted on the element
+  // itself (not just the JSX attr) is what makes muted-autoplay work on iOS.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.muted = true;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            el.play().catch(() => {});
+          } else {
+            el.pause();
+          }
+        });
+      },
+      { rootMargin: "200px 0px", threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <section className="relative py-24 bg-white dark:bg-[#07090D] border-b border-slate-200 dark:border-white/10 transition-colors duration-200 overflow-hidden">
       {/* ambient glow */}
@@ -33,15 +58,15 @@ export default function VideoShowcase() {
           <div className="surface-graphite surface-graphite-glow relative rounded-3xl p-2 sm:p-3 shadow-2xl border border-white/10">
             <div className="relative rounded-2xl overflow-hidden bg-black aspect-video">
               <video
+                ref={videoRef}
                 className="absolute inset-0 w-full h-full object-cover"
-                autoPlay
                 muted
                 loop
                 playsInline
-                preload="metadata"
-                poster="/assets/leiktro-showcase-poster.jpg?v=4"
+                preload="none"
+                poster="/assets/leiktro-showcase-poster.jpg?v=5"
               >
-                <source src="/assets/leiktro-showcase.mp4?v=4" type="video/mp4" />
+                <source src="/assets/leiktro-showcase.mp4?v=5" type="video/mp4" />
               </video>
 
               {/* corner frame accents */}

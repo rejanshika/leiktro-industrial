@@ -88,6 +88,7 @@ export default function InfrastructureSection() {
                   src={fac.image}
                   alt={fac.title}
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-md bg-gradient-to-r from-[#1B212D]/95 to-[#0A0D14]/95 text-white text-[10px] font-mono font-bold border border-white/10 shadow-sm">
